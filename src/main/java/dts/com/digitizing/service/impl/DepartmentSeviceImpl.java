@@ -6,7 +6,6 @@ import dts.com.digitizing.service.DepartmentSevice;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class DepartmentSeviceImpl implements DepartmentSevice {
@@ -16,18 +15,16 @@ public class DepartmentSeviceImpl implements DepartmentSevice {
             DepartmentRespository departmentRespository) {this.departmentRespository = departmentRespository;}
 
     @Override
-    public List<Department> getall() {
+    public List<Department> fillAllDe() {
         return departmentRespository.findAll();
     }
 
     @Override
-    public Department getOne(Long id) {
+    public Department getOneDe(String id) {
+        List<Department> list = departmentRespository.findAll();
         Department department = new Department();
-
-        List<Department> listData = departmentRespository.findAll();
-
-        for (Department dep : listData) {
-            if (dep.getIdRoom().equals(id)) {
+        for (Department dep : list) {
+            if (dep.get_id().equals(id)) {
                 department = dep;
                 break;
             }
@@ -36,55 +33,44 @@ public class DepartmentSeviceImpl implements DepartmentSevice {
     }
 
     @Override
-    public void deletedata(Long id) {
-
-        String a = new String();
-        Department department = new Department();
-        List<Department> listData = departmentRespository.findAll();
-        for (Department dep : listData) {
-            if (dep.getIdRoom() == id) {
-                department = dep;
-                break;
-            } else {System.out.println(" that bai");}
-        }
-        departmentRespository.delete(department);
-
+    public void deleteAllDe() {
+        departmentRespository.deleteAll();
     }
 
     @Override
-    public Department update(Long id, Department department) {
-        Department department1 = getOne(id);
-        List<Department> listData = departmentRespository.findAll();
-        for (Department dep : listData) {
-            if(dep.equals(department1)){
+    public void deleteOneDe(String id) {
+        List<Department> list = departmentRespository.findAll();
+        for (Department dep : list) {
+            if (dep.get_id().equals(id)) {
                 departmentRespository.delete(dep);
                 break;
             }
-            else {
+        }
+
+    }
+
+    @Override
+    public void createDe(Department department) {
+        departmentRespository.save(department);
+    }
+
+    @Override
+    public void editDe(String id, Department department) {
+        List<Department> list = departmentRespository.findAll();
+        for (Department dep : list) {
+            if (dep.get_id().equals(id)) {
+                departmentRespository.delete(dep);
+                departmentRespository.save(department);
                 break;
             }
         }
-
-        return saveData(department);
     }
 
-//    @Override
-//    public Department update(Long id,Department department) {
-//
-//
-//        List<Department> listData = departmentRespository.findAll();
-//        for (Department dep : listData) {
-//            if (dep.getIdRoom() == id) {
-//                dep= department;
-//                break;
-//            } else {System.out.println(" that bai");}
-//        }
-//        return departmentRespository.save();
-//    }
-
-    @Override
-    public Department saveData(Department department) {
-        return departmentRespository.save(department);
-    }
 
 }
+//    List<Department> list = departmentRespository.findAll();
+//        for(Department dep :list){
+//                if()
+//                }
+//                departmentRespository.saveAndFlush()
+//                }
