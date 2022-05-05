@@ -14,7 +14,7 @@ import javax.persistence.*;
 @Data
 
 
-@Document("user")
+//@Document("user")
 public class User {
     @Id
     private String _id;

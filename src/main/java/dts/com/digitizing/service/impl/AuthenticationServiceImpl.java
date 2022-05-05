@@ -3,6 +3,8 @@ package dts.com.digitizing.service.impl;
 import dts.com.digitizing.entity.Authentication;
 import dts.com.digitizing.repository.AuthenticationRespository;
 import dts.com.digitizing.service.AuthenticationService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -10,9 +12,14 @@ import java.util.List;
 @Service
 public class AuthenticationServiceImpl implements AuthenticationService {
     private final AuthenticationRespository authenticationRespository;
+    private final PasswordEncoder passwordEncoder;
+
 
     public AuthenticationServiceImpl(
-            AuthenticationRespository authenticationRespository) {this.authenticationRespository = authenticationRespository;}
+            AuthenticationRespository authenticationRespository,
+            PasswordEncoder passwordEncoder) {this.authenticationRespository = authenticationRespository;
+        this.passwordEncoder =  new BCryptPasswordEncoder();
+    }
 
     @Override
     public List<Authentication> fillAllAu() {
@@ -21,15 +28,15 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public Authentication getOneAu(String email) {
-        List<Authentication> list = authenticationRespository.findAll();
-        Authentication authentication = new Authentication();
-        for (Authentication aut : list) {
-            if (aut.getEmail().equals(email)) {
-                authentication = aut;
-                break;
-            }
-        }
-        return authentication;
+//        List<Authentication> list = authenticationRespository.findAll();
+//        Authentication authentication = new Authentication();
+//        for (Authentication aut : list) {
+//            if (aut.getEmail().equals(email)) {
+//                authentication = aut;
+//                break;
+//            }
+//        }
+        return authenticationRespository.findByEmail(email);
     }
 
     @Override
@@ -51,7 +58,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public void createAu(Authentication authentication) {
-        authenticationRespository.save(authentication);
+
+        authentication.setPassword(this.passwordEncoder.encode(authentication.getPassword()));
+         this.authenticationRespository.save(authentication);
+
     }
 
     @Override

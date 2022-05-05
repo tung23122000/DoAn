@@ -9,7 +9,6 @@ import javax.persistence.Table;
 
 @Document("authentication")
 @Data
-
 public class Authentication {
     @Id
     private String email;
@@ -19,5 +18,7 @@ public class Authentication {
     private String avatar;
 
     private Boolean isNew;
+
+    private String roles;
 
 }
